@@ -25,413 +25,143 @@
     --selected-antibiotic-bg: rgba(121,192,255,0.12);
     --highlight-strong: rgba(88,214,141,0.35);
     --highlight-some: rgba(240,180,41,0.35);
-    --policy: #c084fc;
-    --policy-bg: rgba(192,132,252,0.15);
-    --policy-highlight: rgba(192,132,252,0.3);
-    --policy-border: #a855f7;
+    /* Policy colors */
+    --pol-pref: #c084fc;
+    --pol-pref-bg: rgba(192,132,252,0.18);
+    --pol-pref-border: #a855f7;
+    --pol-pref-cell: rgba(192,132,252,0.32);
+    --pol-alt: #818cf8;
+    --pol-alt-bg: rgba(129,140,248,0.10);
+    --pol-alt-border: #6366f1;
+    --pol-alt-cell: rgba(129,140,248,0.22);
+    /* Pathogen highlight */
+    --path-pref: #fb923c;
+    --path-pref-bg: rgba(251,146,60,0.18);
+    --path-pref-border: #f97316;
+    --path-alt: #fbbf24;
+    --path-alt-bg: rgba(251,191,36,0.12);
+    --path-alt-border: #d97706;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; min-height: 100vh; padding: 2rem; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    padding: 2rem;
-  }
-
-  header {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  header h1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    margin-bottom: 0.3rem;
-  }
-
+  header { margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 0.5rem; }
+  header h1 { font-family: 'IBM Plex Mono', monospace; font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 0.3rem; }
   header h1 span { color: var(--accent); }
   header p { color: var(--text-muted); font-size: 0.8rem; font-weight: 300; }
+  .header-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.75rem; border-radius: 100px; background: var(--pol-pref-bg); border: 1px solid var(--pol-pref-border); color: var(--pol-pref); white-space: nowrap; }
 
-  .header-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.68rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: 100px;
-    background: var(--policy-bg);
-    border: 1px solid var(--policy-border);
-    color: var(--policy);
-    white-space: nowrap;
-  }
-
-  .mode-tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    width: fit-content;
-  }
-
-  .mode-tab {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 0.55rem 1.1rem;
-    border: none;
-    background: var(--surface2);
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    border-right: 1px solid var(--border);
-  }
-
+  .mode-tabs { display: flex; gap: 0; margin-bottom: 1.25rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; }
+  .mode-tab { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500; padding: 0.55rem 1.1rem; border: none; background: var(--surface2); color: var(--text-muted); cursor: pointer; transition: all 0.15s; border-right: 1px solid var(--border); }
   .mode-tab:last-child { border-right: none; }
   .mode-tab:hover { color: var(--text); background: var(--surface); }
   .mode-tab.active-ab   { background: var(--selected-antibiotic-bg); color: var(--selected-antibiotic); }
   .mode-tab.active-bact { background: var(--selected-bacteria-bg);   color: var(--selected-bacteria);   }
-  .mode-tab.active-dx   { background: var(--policy-bg);              color: var(--policy);               }
+  .mode-tab.active-pol  { background: var(--pol-pref-bg);            color: var(--pol-pref);            }
 
-  .controls {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .clear-btn {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    padding: 0.45rem 0.9rem;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-left: auto;
-  }
-
+  .controls { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
+  .clear-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; padding: 0.45rem 0.9rem; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; margin-left: auto; }
   .clear-btn:hover { border-color: #ff7b72; color: #ff7b72; }
 
-  #dx-panel { display: none; margin-bottom: 1.25rem; }
-  #dx-panel.visible { display: block; }
+  /* Policy panel */
+  #pol-panel { display: none; margin-bottom: 1.25rem; }
+  #pol-panel.visible { display: block; }
+  .pol-search-wrap { position: relative; margin-bottom: 0.75rem; }
+  #pol-search { width: 100%; max-width: 480px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 1rem 0.55rem 2.2rem; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; color: var(--text); outline: none; transition: border-color 0.15s; }
+  #pol-search:focus { border-color: var(--pol-pref-border); }
+  #pol-search::placeholder { color: var(--text-muted); }
+  .pol-search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; pointer-events: none; }
+  .pol-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; max-width: 960px; }
+  .pol-chip { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 100px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .pol-chip:hover { border-color: var(--pol-pref-border); color: var(--pol-pref); }
+  .pol-chip.selected { background: var(--pol-pref-bg); border-color: var(--pol-pref-border); color: var(--pol-pref); font-weight: 500; }
+  .pol-chip.hidden { display: none; }
 
-  .dx-search-wrap { position: relative; margin-bottom: 0.75rem; }
+  /* Info bar */
+  .info-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1.1rem; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--text-muted); min-height: 48px; display: flex; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; }
+  .info-bar.pol-mode { border-color: var(--pol-pref-border); background: rgba(168,85,247,0.04); }
+  .info-bar .label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+  .info-bar .label.pol-label { color: var(--pol-pref); }
+  .info-bar .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
 
-  #dx-search {
-    width: 100%;
-    max-width: 480px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.55rem 1rem 0.55rem 2.2rem;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.85rem;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  #dx-search:focus { border-color: var(--policy-border); }
-  #dx-search::placeholder { color: var(--text-muted); }
-
-  .dx-search-icon {
-    position: absolute;
-    left: 0.7rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    pointer-events: none;
-  }
-
-  .dx-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    max-width: 960px;
-  }
-
-  .dx-chip {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.78rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .dx-chip:hover { border-color: var(--policy-border); color: var(--policy); }
-  .dx-chip.selected { background: var(--policy-bg); border-color: var(--policy-border); color: var(--policy); font-weight: 500; }
-  .dx-chip.hidden { display: none; }
-
-  .info-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.85rem 1.1rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    min-height: 48px;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    transition: all 0.2s;
-    flex-wrap: wrap;
-  }
-
-  .info-bar.dx-mode { border-color: var(--policy-border); background: rgba(168,85,247,0.04); }
-
-  .info-bar .label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .info-bar .label.policy-label { color: var(--policy); }
-
-  .info-bar .pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    align-items: center;
-  }
-
-  .pill {
-    padding: 0.18rem 0.55rem;
-    border-radius: 100px;
-    font-size: 0.73rem;
-    font-weight: 500;
-  }
-
+  .pill { padding: 0.18rem 0.55rem; border-radius: 100px; font-size: 0.73rem; font-weight: 500; }
   .pill.strong      { background: var(--strong-bg);  color: var(--strong); }
   .pill.some        { background: var(--some-bg);    color: var(--some);   }
-  .pill.policy-pref { background: var(--policy-bg);  color: var(--policy); border: 1px solid var(--policy-border); }
-  .pill.policy-alt  { background: var(--surface2);   color: var(--text-muted); border: 1px solid var(--border); }
+  .pill.pol-pref    { background: var(--pol-pref-bg); color: var(--pol-pref); border: 1px solid var(--pol-pref-border); }
+  .pill.pol-alt     { background: var(--pol-alt-bg);  color: var(--pol-alt);  border: 1px solid var(--pol-alt-border);  }
+  .pill.path-pref   { background: var(--path-pref-bg); color: var(--path-pref); border: 1px solid var(--path-pref-border); }
+  .pill.path-alt    { background: var(--path-alt-bg);  color: var(--path-alt);  border: 1px solid var(--path-alt-border);  }
 
-  #policy-card {
-    display: none;
-    background: var(--surface);
-    border: 1px solid var(--policy-border);
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.82rem;
-    line-height: 1.6;
-  }
-
+  /* Policy card */
+  #policy-card { display: none; background: var(--surface); border: 1px solid var(--pol-pref-border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.82rem; line-height: 1.6; }
   #policy-card.visible { display: block; }
-
-  .pc-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--policy);
-    margin-bottom: 0.6rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .pc-title::before {
-    content: '';
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--policy);
-  }
-
+  .pc-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--pol-pref); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pc-title::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--pol-pref); }
   .pc-section { margin-bottom: 0.45rem; }
   .pc-section:last-child { margin-bottom: 0; }
-
-  .pc-key {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--text-muted);
-    margin-bottom: 0.15rem;
-  }
-
+  .pc-key { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 0.15rem; }
   .pc-val { color: var(--text); }
-  .pc-val em { color: var(--policy); font-style: normal; font-weight: 500; }
+  .pc-val em { color: var(--pol-pref); font-style: normal; font-weight: 500; }
   .pc-val .note { color: var(--text-muted); font-size: 0.77rem; }
+  .pc-aliases { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
 
-  .table-wrapper {
-    overflow-x: auto;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-  }
-
+  /* Table */
+  .table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
   table { border-collapse: collapse; width: 100%; min-width: 1100px; }
-
-  thead th {
-    background: var(--surface);
-    border-bottom: 2px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 0;
-    vertical-align: bottom;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  thead th:first-child { position: sticky; left: 0; z-index: 20; width: 200px; min-width: 200px; }
-
-  .ab-header {
-    display: block;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-    padding: 1.2rem 0.6rem 0.6rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-    height: 160px;
-    text-align: left;
-    border-left: 3px solid transparent;
-  }
-
+  thead th { background: var(--surface); border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); padding: 0; vertical-align: bottom; position: sticky; top: 0; z-index: 10; }
+  thead th:first-child { position: sticky; left: 0; z-index: 20; width: 210px; min-width: 210px; }
+  .ab-header { display: block; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); padding: 1.2rem 0.6rem 0.6rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; height: 160px; text-align: left; border-left: 3px solid transparent; }
   .ab-header:hover { color: var(--selected-antibiotic); }
-  .ab-header.selected-ab    { color: var(--selected-antibiotic); background: var(--selected-antibiotic-bg); border-left-color: var(--selected-antibiotic); }
-  .ab-header.policy-pref-ab { color: var(--policy);              background: var(--policy-bg);              border-left-color: var(--policy-border); }
-  .ab-header.policy-alt-ab  { color: #a78bfa;                    background: rgba(167,139,250,0.08);         border-left-color: #7c3aed; }
+  .ab-header.selected-ab     { color: var(--selected-antibiotic); background: var(--selected-antibiotic-bg); border-left-color: var(--selected-antibiotic); }
+  .ab-header.pol-pref-ab     { color: var(--pol-pref); background: var(--pol-pref-bg); border-left-color: var(--pol-pref-border); }
+  .ab-header.pol-alt-ab      { color: var(--pol-alt);  background: var(--pol-alt-bg);  border-left-color: var(--pol-alt-border);  }
 
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:last-child { border-bottom: none; }
-
-  tbody td:first-child {
-    position: sticky; left: 0;
-    background: var(--surface);
-    border-right: 2px solid var(--border);
-    padding: 0.65rem 1rem;
-    font-size: 0.8rem;
-    font-style: italic;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-    min-width: 200px;
-    z-index: 5;
-  }
-
+  tbody td:first-child { position: sticky; left: 0; background: var(--surface); border-right: 2px solid var(--border); padding: 0.55rem 0.75rem 0.55rem 1rem; font-size: 0.78rem; font-style: italic; color: var(--text-muted); cursor: pointer; transition: all 0.15s; min-width: 210px; z-index: 5; }
   tbody td:first-child:hover { color: var(--selected-bacteria); }
+  tbody td:first-child.selected-bact { color: var(--selected-bacteria); background: var(--selected-bacteria-bg); border-left: 3px solid var(--selected-bacteria); font-style: normal; font-weight: 500; }
+  /* Preferred pathogen row */
+  tbody td:first-child.path-pref-row { color: var(--path-pref); background: var(--path-pref-bg); border-left: 3px solid var(--path-pref-border); font-style: normal; font-weight: 600; }
+  /* Alternative pathogen row */
+  tbody td:first-child.path-alt-row  { color: var(--path-alt);  background: var(--path-alt-bg);  border-left: 3px solid var(--path-alt-border);  font-style: normal; font-weight: 500; }
 
-  tbody td:first-child.selected-bact {
-    color: var(--selected-bacteria);
-    background: var(--selected-bacteria-bg);
-    border-left: 3px solid var(--selected-bacteria);
-    font-style: normal; font-weight: 500;
-  }
-
-  tbody td:first-child.policy-bact {
-    color: var(--policy);
-    background: var(--policy-bg);
-    border-left: 3px solid var(--policy-border);
-    font-style: normal; font-weight: 500;
-  }
-
-  tbody td {
-    border-right: 1px solid var(--border);
-    text-align: center;
-    padding: 0.6rem 0.5rem;
-    transition: background 0.12s;
-  }
-
-  .cell-inner {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px; height: 32px;
-    border-radius: 6px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: all 0.15s;
-  }
-
+  tbody td { border-right: 1px solid var(--border); text-align: center; padding: 0.6rem 0.5rem; transition: background 0.12s; }
+  .cell-inner { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; transition: all 0.15s; }
   .cell-strong { background: var(--strong-bg); color: var(--strong); }
   .cell-some   { background: var(--some-bg);   color: var(--some);   }
   .cell-none   { color: var(--none); font-size: 0.65rem; }
 
   .row-highlight td:not(:first-child) { background: rgba(255,179,193,0.04); }
 
+  /* Manual select highlights */
   .cell-match-strong .cell-inner { background: var(--highlight-strong); color: var(--strong); box-shadow: 0 0 0 2px var(--strong); transform: scale(1.15); }
   .cell-match-some   .cell-inner { background: var(--highlight-some);   color: var(--some);   box-shadow: 0 0 0 2px var(--some);   transform: scale(1.15); }
   .cell-dim          .cell-inner { opacity: 0.18; }
 
-  .cell-policy-strong .cell-inner { background: var(--policy-highlight);        color: var(--policy); box-shadow: 0 0 0 2px var(--policy-border); transform: scale(1.15); }
-  .cell-policy-some   .cell-inner { background: rgba(192,132,252,0.12); color: #c084fc;  box-shadow: 0 0 0 2px #7c3aed;            transform: scale(1.1); }
-  .cell-policy-dim    .cell-inner { opacity: 0.15; }
+  /* Policy antibiotic × pathogen intersection — preferred */
+  .cell-pol-pref-strong .cell-inner { background: var(--pol-pref-cell); color: var(--pol-pref); box-shadow: 0 0 0 2px var(--pol-pref-border); transform: scale(1.15); }
+  .cell-pol-pref-some   .cell-inner { background: rgba(192,132,252,0.14); color: var(--pol-pref); box-shadow: 0 0 0 1.5px var(--pol-pref-border); transform: scale(1.08); }
+  .cell-pol-pref-dim    .cell-inner { opacity: 0.15; }
 
-  legend {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-    padding: 0.85rem 1.1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    align-items: center;
-  }
+  /* Policy antibiotic × pathogen intersection — alternative */
+  .cell-pol-alt-strong  .cell-inner { background: var(--pol-alt-cell); color: var(--pol-alt); box-shadow: 0 0 0 2px var(--pol-alt-border); transform: scale(1.1); }
+  .cell-pol-alt-some    .cell-inner { background: rgba(129,140,248,0.10); color: var(--pol-alt); box-shadow: 0 0 0 1.5px var(--pol-alt-border); transform: scale(1.05); }
+  .cell-pol-alt-dim     .cell-inner { opacity: 0.13; }
 
-  .legend-item {
-    display: flex; align-items: center;
-    gap: 0.45rem;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .legend-dot {
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem; font-weight: 600;
-  }
-
+  /* Legend & footnotes */
+  legend { display: flex; gap: 1.25rem; margin-top: 1.5rem; flex-wrap: wrap; padding: 0.85rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; color: var(--text-muted); }
+  .legend-dot { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 600; }
   .legend-sep { width: 1px; height: 24px; background: var(--border); }
+  .footnotes { margin-top: 1.25rem; padding: 0.85rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; font-family: 'IBM Plex Mono', monospace; }
 
-  .footnotes {
-    margin-top: 1.25rem;
-    padding: 0.85rem 1.1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.76rem;
-    color: var(--text-muted);
-    line-height: 1.8;
-    font-family: 'IBM Plex Mono', monospace;
-  }
+  /* Row alias tooltip */
+  .bact-name { display: flex; flex-direction: column; gap: 1px; }
+  .bact-primary { font-style: italic; }
+  .bact-alias { font-size: 0.67rem; color: var(--text-muted); font-style: normal; font-weight: 400; white-space: normal; line-height: 1.3; max-width: 190px; }
+  tbody td:first-child.path-pref-row .bact-alias,
+  tbody td:first-child.path-alt-row  .bact-alias { color: inherit; opacity: 0.75; }
 </style>
 </head>
 <body>
@@ -439,7 +169,7 @@
 <header>
   <div>
     <h1>Bio<span>gram</span> — Antibiotic Coverage Matrix</h1>
-    <p>Click antibiotics or bacteria to explore coverage · or use Diagnosis mode to apply Henry Ford empiric guidelines</p>
+    <p>Click antibiotics or bacteria to explore coverage · or use Policy mode to apply Henry Ford empiric guidelines</p>
   </div>
   <span class="header-badge">⚕ Henry Ford Health — Empiric Guidelines</span>
 </header>
@@ -447,52 +177,45 @@
 <div class="mode-tabs">
   <button class="mode-tab active-ab" id="btn-ab"   onclick="setMode('antibiotic')">🔵 Antibiotics</button>
   <button class="mode-tab"           id="btn-bact" onclick="setMode('bacteria')">🔴 Bacteria</button>
-  <button class="mode-tab"           id="btn-dx"   onclick="setMode('dx')">🟣 Diagnosis</button>
+  <button class="mode-tab"           id="btn-pol"  onclick="setMode('policy')">🟣 Policy</button>
 </div>
 
 <div class="controls">
   <button class="clear-btn" onclick="clearAll()">✕ Clear</button>
 </div>
 
-<div id="dx-panel">
-  <div class="dx-search-wrap">
-    <span class="dx-search-icon">🔍</span>
-    <input id="dx-search" type="text" placeholder="Search diagnoses…" oninput="filterDx(this.value)">
+<div id="pol-panel">
+  <div class="pol-search-wrap">
+    <span class="pol-search-icon">🔍</span>
+    <input id="pol-search" type="text" placeholder="Search diagnoses…" oninput="filterPol(this.value)">
   </div>
-  <div class="dx-grid" id="dx-grid"></div>
+  <div class="pol-grid" id="pol-grid"></div>
 </div>
 
 <div class="info-bar" id="info-bar">
   <span class="label">TIP</span>
-  <span>Click column headers to select antibiotics — see which organisms are covered. Or switch mode to select bacteria rows, or use Diagnosis mode for empiric guidelines.</span>
+  <span>Click column headers to select antibiotics — or switch mode to select bacteria rows, or use 🟣 Policy mode for empiric guidelines.</span>
 </div>
 
 <div id="policy-card"></div>
 
 <div class="table-wrapper">
-  <table id="biogram-table">
+  <table>
     <thead id="thead"></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 
 <legend>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:rgba(88,214,141,0.15);color:#58d68d;">xx</div>Strong activity
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:rgba(240,180,41,0.15);color:#f0b429;">o</div>Some activity
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:#21262d;color:#30363d;">—</div>No activity
-  </div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(88,214,141,0.15);color:#58d68d;">xx</div>Strong activity</div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(240,180,41,0.15);color:#f0b429;">o</div>Some activity</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#21262d;color:#30363d;">—</div>No activity</div>
   <div class="legend-sep"></div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:rgba(192,132,252,0.3);color:#c084fc;border:2px solid #a855f7;">xx</div>Policy preferred
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:2px solid #7c3aed;">o</div>Policy alternative
-  </div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(192,132,252,0.32);color:#c084fc;border:2px solid #a855f7;">xx</div>Policy preferred antibiotic × pathogen</div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(129,140,248,0.22);color:#818cf8;border:2px solid #6366f1;">xx</div>Policy alternative antibiotic × pathogen</div>
+  <div class="legend-sep"></div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(251,146,60,0.18);color:#fb923c;border:2px solid #f97316;font-size:0.6rem;">PATH</div>Suspected pathogen (preferred)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:rgba(251,191,36,0.12);color:#fbbf24;border:2px solid #d97706;font-size:0.6rem;">alt</div>Suspected pathogen (alternative)</div>
 </legend>
 
 <div class="footnotes">
@@ -503,333 +226,389 @@
 </div>
 
 <script>
+// ─── BIOGRAM DATA ────────────────────────────────────────────────────────────
 const antibiotics = [
-  "Vancomycin / Daptomycin* / Linezolid*^",
-  "Ampicillin / Amoxicillin^",
-  "Nafcillin",
-  "Unasyn / Augmentin^",
-  "Cefazolin / Cephalexin^",
-  "Cefotetan / Cefoxitin",
-  "Ceftriaxone",
-  "Ceftazidime",
-  "Cefepime",
-  "Pip/Tazo",
-  "Ertapenem",
-  "Meropenem / Imipenem / Doripenem",
-  "Azithromycin^",
-  "Ciprofloxacin^",
-  "Levofloxacin^ / Moxifloxacin**^",
-  "TMP/SMX^",
-  "Clindamycin^",
-  "Doxycycline^",
-  "Metronidazole^"
+  "Vancomycin / Daptomycin* / Linezolid*^",   // 0
+  "Ampicillin / Amoxicillin^",                  // 1
+  "Nafcillin",                                  // 2
+  "Unasyn / Augmentin^",                        // 3
+  "Cefazolin / Cephalexin^",                    // 4
+  "Cefotetan / Cefoxitin",                      // 5
+  "Ceftriaxone",                                // 6
+  "Ceftazidime",                                // 7
+  "Cefepime",                                   // 8
+  "Pip/Tazo",                                   // 9
+  "Ertapenem",                                  // 10
+  "Meropenem / Imipenem / Doripenem",           // 11
+  "Azithromycin^",                              // 12
+  "Ciprofloxacin^",                             // 13
+  "Levofloxacin^ / Moxifloxacin**^",           // 14
+  "TMP/SMX^",                                   // 15
+  "Clindamycin^",                               // 16
+  "Doxycycline^",                               // 17
+  "Metronidazole^"                              // 18
 ];
 
-const bacteria = [
-  "Enterococcus",
-  "MRSA",
-  "MSSA",
-  "S. pneumoniae",
-  "B-hemolytic Strep (GAS/GBS)",
-  "Gram-neg: community",
-  "Gram-neg: hospital",
-  "Enterobacter / AmpC-producers",
-  "Pseudomonas",
-  "ESBL-producers",
-  "Mouth anaerobes",
-  "Gut anaerobes",
-  "Atypicals"
+// bacteria[i] = { name, aliases }
+// aliases shown as sub-label; used for pathogen text matching
+const bacteriaList = [
+  { name: "Enterococcus",                   aliases: "E. faecalis, E. faecium, VRE, VSE — gram-positive cocci" },
+  { name: "MRSA",                           aliases: "Methicillin-resistant S. aureus, HA-MRSA, CA-MRSA" },
+  { name: "MSSA",                           aliases: "Methicillin-susceptible S. aureus — gram-positive" },
+  { name: "S. pneumoniae",                  aliases: "Streptococcus pneumoniae, pneumococcus — gram-positive" },
+  { name: "B-hemolytic Strep (GAS/GBS)",    aliases: "Group A (S. pyogenes), Group B (S. agalactiae) — gram-positive" },
+  { name: "Gram-neg: community",            aliases: "E. coli, Klebsiella, Proteus, Haemophilus influenzae (Enterobacteriaceae)" },
+  { name: "Gram-neg: hospital",             aliases: "Klebsiella, Serratia, Citrobacter, Acinetobacter — nosocomial Enterobacterales" },
+  { name: "Enterobacter / AmpC-producers",  aliases: "Enterobacter cloacae, K. aerogenes — inducible AmpC β-lactamase" },
+  { name: "Pseudomonas",                    aliases: "P. aeruginosa — gram-negative non-fermenter" },
+  { name: "ESBL-producers",                 aliases: "Extended-spectrum β-lactamase: E. coli, Klebsiella spp." },
+  { name: "Mouth anaerobes",                aliases: "Peptostreptococcus, Fusobacterium, Prevotella, oral flora" },
+  { name: "Gut anaerobes",                  aliases: "Bacteroides fragilis, Clostridium spp., Peptostreptococcus" },
+  { name: "Atypicals",                      aliases: "Mycoplasma, Chlamydophila (Chlamydia) pneumoniae, Legionella" }
 ];
 
 const data = [
-  ["xx","xx",null,"xx",null,null,null,null,null,"xx",null,"o",null,null,null,null,null,null,null],
-  ["xx",null,null,null,null,null,null,null,null,null,null,null,null,null,null,"xx","o","o",null],
-  ["xx",null,"xx","o","xx","o","o",null,null,"xx","o","o","o","o","o","o","xx","xx","xx"],
-  ["xx","xx","o","xx","xx","xx","xx","o","o","o","o","xx",null,null,"xx",null,"xx","xx",null],
-  ["xx","xx",null,"xx","xx","xx","xx","o","o","xx","o","xx",null,null,null,null,"o","o",null],
-  [null,"o",null,"o","o","o","xx","xx","xx","xx","xx","xx",null,"xx","xx","o",null,"o",null],
-  [null,null,null,null,null,null,"o","xx","xx","xx","xx","xx",null,"xx","o","o",null,null,null],
-  [null,null,null,null,null,null,null,null,"o",null,"xx","xx",null,"o","o","o",null,null,null],
-  [null,null,null,null,null,null,null,"xx","xx","xx",null,"xx",null,"xx","o",null,null,null,null],
-  [null,null,null,null,null,null,null,null,null,null,"xx","xx",null,"o","o","o",null,null,null],
-  ["o","o",null,"xx",null,"xx","o",null,null,"xx","xx","xx",null,null,"o",null,"xx",null,"xx"],
-  [null,null,null,"xx",null,"xx",null,null,null,"xx","xx","xx",null,null,null,null,"o",null,"xx"],
-  [null,null,null,null,null,null,null,null,null,null,null,null,"xx","xx","xx",null,null,"xx",null],
+  ["xx","xx",null,"xx",null,null,null,null,null,"xx",null,"o",null,null,null,null,null,null,null],   // Enterococcus
+  ["xx",null,null,null,null,null,null,null,null,null,null,null,null,null,null,"xx","o","o",null],     // MRSA
+  ["xx",null,"xx","o","xx","o","o",null,null,"xx","o","o","o","o","o","o","xx","xx","xx"],            // MSSA
+  ["xx","xx","o","xx","xx","xx","xx","o","o","o","o","xx",null,null,"xx",null,"xx","xx",null],        // S. pneumoniae
+  ["xx","xx",null,"xx","xx","xx","xx","o","o","xx","o","xx",null,null,null,null,"o","o",null],        // B-hemolytic Strep
+  [null,"o",null,"o","o","o","xx","xx","xx","xx","xx","xx",null,"xx","xx","o",null,"o",null],         // Gram neg: community
+  [null,null,null,null,null,null,"o","xx","xx","xx","xx","xx",null,"xx","o","o",null,null,null],      // Gram neg: hospital
+  [null,null,null,null,null,null,null,null,"o",null,"xx","xx",null,"o","o","o",null,null,null],       // Enterobacter/AmpC
+  [null,null,null,null,null,null,null,"xx","xx","xx",null,"xx",null,"xx","o",null,null,null,null],    // Pseudomonas
+  [null,null,null,null,null,null,null,null,null,null,"xx","xx",null,"o","o","o",null,null,null],      // ESBL
+  ["o","o",null,"xx",null,"xx","o",null,null,"xx","xx","xx",null,null,"o",null,"xx",null,"xx"],       // Mouth anaerobes
+  [null,null,null,"xx",null,"xx",null,null,null,"xx","xx","xx",null,null,null,null,"o",null,"xx"],    // Gut anaerobes
+  [null,null,null,null,null,null,null,null,null,null,null,null,"xx","xx","xx",null,null,"xx",null],   // Atypicals
 ];
 
-// Henry Ford empiric policy
+// ─── PATHOGEN → BIOGRAM ROW MAPPING ─────────────────────────────────────────
+// Maps free-text pathogen terms from the policy to bacteria[] indices.
+// Multiple synonyms handled via keyword matching.
+// Each entry: { keywords: [...lowercase tokens], row: index }
+const pathogenMap = [
+  { kw: ["enterococcus","enterococci","enterococcal","e. faecalis","e. faecium","vre","vre"],         row: 0  },
+  { kw: ["mrsa","methicillin-resistant staphyloc","methicillin resistant staphyloc","ca-mrsa","ha-mrsa"], row: 1 },
+  { kw: ["mssa","methicillin-susceptible","methicillin susceptible","methicillin-sensitive","methicillin sensitive"], row: 2 },
+  { kw: ["s. pneumoniae","streptococcus pneumoniae","pneumococcus","pneumococc"],                    row: 3  },
+  { kw: ["viridans strep","viridans streptococci","group a strep","group b strep","beta-hemolytic","beta hemolytic","b-hemolytic","b hemolytic","s. pyogenes","streptococcus pyogenes","s. agalactiae","gbs","gas","hemolytic strep"], row: 4 },
+  { kw: ["h. influenzae","haemophilus","h influenzae"],                                              row: 5  },
+  { kw: ["e. coli","escherichia coli","klebsiella","k. pneumoniae","proteus","serratia","citrobacter","providencia","morganella","enterobacter","enterobacteriaceae","enterobacterales","enterobacteraciae","gram-negative","gram negative","gram neg"],    row: 5  },
+  { kw: ["acinetobacter","nosocomial gram","hospital gram"],                                          row: 6  },
+  { kw: ["ampc","amp-c","enterobacter cloacae","k. aerogenes","klebsiella aerogenes","inducible"],   row: 7  },
+  { kw: ["pseudomonas","p. aeruginosa","pseudomonal"],                                               row: 8  },
+  { kw: ["esbl","extended-spectrum","extended spectrum","beta-lactamase producer","β-lactamase producer"], row: 9 },
+  { kw: ["mouth anaerobe","oral anaerobe","oral flora","peptostreptococcus","fusobacterium","prevotella","oral"],  row: 10 },
+  { kw: ["bacteroides","clostridium","gut anaerobe","bowel anaerobe","b. fragilis"],                 row: 11 },
+  { kw: ["anaerobe","anaerobes","anaerobic"],                                                         row: [10,11] }, // both mouth + gut
+  { kw: ["staphyloc","staphylococci","staphylococcus aureus","s. aureus","staph"],                   row: [1,2]   }, // MRSA + MSSA
+  { kw: ["streptococc","streptococci"],                                                               row: [3,4]   }, // pneumo + hemolytic
+  { kw: ["mycoplasma","chlamydophila","chlamydia pneumoniae","legionella","atypical"],               row: 12 },
+  { kw: ["listeria"],                                                                                 row: 5  }, // community gram-neg context — Listeria is gram-pos but often grouped with CNS infections
+  { kw: ["n. gonorrhoeae","neisseria gonorrhoeae","gonococcus","gonorrhea","gonorrhoeae"],           row: 5  },
+  { kw: ["n. meningitidis","neisseria meningitidis","meningococcus"],                               row: 5  },
+  { kw: ["pasteurella"],                                                                              row: 5  },
+];
+
+// Resolve pathogen text → set of {row, isAlt}
+// prefPathogens text vs altPathogens text are passed separately
+function resolvePathogens(prefText, altText) {
+  const prefRows = new Set();
+  const altRows  = new Set();
+
+  function resolve(text, target) {
+    if (!text) return;
+    const lower = text.toLowerCase();
+    pathogenMap.forEach(entry => {
+      if (entry.kw.some(k => lower.includes(k))) {
+        const rows = Array.isArray(entry.row) ? entry.row : [entry.row];
+        rows.forEach(r => target.add(r));
+      }
+    });
+  }
+
+  resolve(prefText, prefRows);
+  resolve(altText, altRows);
+  // Remove from altRows anything already in prefRows
+  altRows.forEach(r => { if (prefRows.has(r)) altRows.delete(r); });
+  return { prefRows, altRows };
+}
+
+// ─── POLICY DATA ─────────────────────────────────────────────────────────────
 // prefAb / altAb = indices into antibiotics[]
-// targetBact     = indices into bacteria[]
+// pathogens: free text (will be resolved to rows via pathogenMap)
+// targetBact: explicit biogram row overrides if auto-resolve is insufficient
 const diagnoses = [
   {
     name: "Bacteremia — Catheter Related",
     pathogens: "Staphylococci, Enterococcus, Enterobacteriaceae",
+    altPathogens: "",
     prefAb: [0,8], altAb: [],
-    targetBact: [0,1,2,5,6],
     note: "Add cefepime if femoral access, hemodialysis, or critically ill/neutropenic. Refer to SA treatment guidelines for confirmed MSSA/MRSA."
   },
   {
     name: "Brain Abscess",
     pathogens: "Staphylococci, Streptococci, Enterobacteriaceae, anaerobes",
+    altPathogens: "",
     prefAb: [6,18,0], altAb: [],
-    targetBact: [1,2,3,4,5,10,11],
     note: ""
   },
   {
     name: "Brain Abscess — Post-neurosurgical",
-    pathogens: "Staphylococci, Streptococci, Enterobacteriaceae, P. aeruginosa, anaerobes",
+    pathogens: "Staphylococci, Streptococci, Enterobacteriaceae, Pseudomonas, anaerobes",
+    altPathogens: "",
     prefAb: [8,18,0], altAb: [],
-    targetBact: [1,2,3,4,5,6,8,10,11],
     note: "Severe β-lactam allergy: Aztreonam + Metronidazole + Vancomycin."
   },
   {
     name: "C. difficile Colitis",
-    pathogens: "C. difficile",
+    pathogens: "C. difficile (gut anaerobe)",
+    altPathogens: "",
     prefAb: [], altAb: [],
-    targetBact: [],
-    note: "1st line: Vancomycin PO. Add IV metronidazole for severe sepsis/shock or fulminant disease. Recurrent: Fidaxomicin PO or Vancomycin PO. See C. diff guidelines."
+    note: "1st line: Vancomycin PO. Add IV metronidazole for severe sepsis/shock. Recurrent: Fidaxomicin PO or Vancomycin PO."
   },
   {
     name: "COPD Exacerbation",
-    pathogens: "H. influenzae, S. pneumoniae, M. catarrhalis",
+    pathogens: "H. influenzae, S. pneumoniae",
+    altPathogens: "atypicals",
     prefAb: [17], altAb: [12],
-    targetBact: [3,12],
-    note: "Treat only if increased sputum volume/purulence OR acute respiratory failure requiring ICU. Azithromycin if recent doxycycline exposure or intolerance."
+    note: "Treat only if increased sputum volume/purulence OR respiratory failure requiring ICU. Azithromycin if recent doxycycline or intolerance."
   },
   {
     name: "Endocarditis — Native Valve",
     pathogens: "Staphylococci, Streptococci",
+    altPathogens: "",
     prefAb: [0], altAb: [2,4],
-    targetBact: [1,2,3,4],
     note: "Vancomycin ± nafcillin or ± cefazolin depending on MRSA status."
   },
   {
     name: "Endocarditis — Prosthetic Valve",
     pathogens: "Staphylococci, Streptococci, Enterococci",
+    altPathogens: "",
     prefAb: [0], altAb: [2],
-    targetBact: [0,1,2,3,4],
     note: "Add gentamicin ± rifampin ± nafcillin. Some experts suggest starting rifampin after blood cultures clear for 48 hours."
   },
   {
     name: "Endometritis / Septic Thrombophlebitis (Postpartum)",
     pathogens: "Enterobacteriaceae, Group B Streptococci",
+    altPathogens: "",
     prefAb: [6,18], altAb: [5,17],
-    targetBact: [4,5],
     note: "Alternatives: Ampicillin + gentamicin + metronidazole; clindamycin + gentamicin for severe β-lactam allergy."
   },
   {
     name: "Febrile Neutropenia",
     pathogens: "Enterobacteriaceae, Pseudomonas, viridans Streptococci",
+    altPathogens: "",
     prefAb: [8], altAb: [0,18],
-    targetBact: [3,5,6,8],
-    note: "Cefepime monotherapy preferred. Add vancomycin + metronidazole for hemodynamic instability. See febrile neutropenia guidelines for MRSA empiric therapy indications."
+    note: "Cefepime monotherapy preferred. Add vancomycin + metronidazole for hemodynamic instability."
   },
   {
     name: "Intra-abdominal — Community Acquired",
-    pathogens: "Enterobacteriaceae, Bacteroides, Enterococci, Streptococci",
+    pathogens: "Enterobacteriaceae, anaerobes, Streptococci",
+    altPathogens: "Enterococcus",
     prefAb: [6,18], altAb: [10,5],
-    targetBact: [0,3,4,5,9,11],
-    note: "Ertapenem if prior ESBL within 12 months (low Pseudomonas risk). Moxifloxacin for severe β-lactam allergy. Oral outpatient options available."
+    note: "Ertapenem if prior ESBL within 12 months. Moxifloxacin for severe β-lactam allergy."
   },
   {
     name: "Intra-abdominal — Spontaneous Bacterial Peritonitis",
     pathogens: "Streptococci, Enterobacteriaceae",
+    altPathogens: "",
     prefAb: [6], altAb: [14],
-    targetBact: [3,4,5],
     note: "Moxifloxacin for beta-lactam allergy."
   },
   {
     name: "Intra-abdominal — Pseudomonas Suspected",
-    pathogens: "Enterobacteriaceae, Bacteroides, Pseudomonas, Enterococci",
+    pathogens: "Enterobacteriaceae, anaerobes, Pseudomonas",
+    altPathogens: "Enterococcus, Staphylococci",
     prefAb: [9], altAb: [8,18],
-    targetBact: [0,5,6,8,11],
     note: "Severe β-lactam allergy: Aztreonam + Metronidazole + Vancomycin."
   },
   {
     name: "Meningitis — Community Acquired",
-    pathogens: "S. pneumoniae, N. meningitidis, Listeria",
+    pathogens: "S. pneumoniae, N. meningitidis",
+    altPathogens: "Listeria",
     prefAb: [6,0], altAb: [1],
-    targetBact: [3,5],
     note: "Add ampicillin if Listeria risk (age >50, alcohol abuse, pregnancy). Add dexamethasone 10mg q6h x 4 days — give first dose 15–20 min before or with first antibiotic."
   },
   {
     name: "Meningitis — Post-neurosurgical",
-    pathogens: "Staphylococci, Gram-negative bacteria",
+    pathogens: "Staphylococci, gram-negative bacteria",
+    altPathogens: "",
     prefAb: [8,0], altAb: [],
-    targetBact: [1,2,5,6],
     note: "Severe β-lactam allergy: Aztreonam + Vancomycin."
   },
   {
     name: "Pelvic Inflammatory Disease",
-    pathogens: "Enterobacteriaceae, GBS, Chlamydia, N. gonorrhoeae",
+    pathogens: "Enterobacteriaceae, Group B Streptococci, N. gonorrhoeae",
+    altPathogens: "atypicals",
     prefAb: [6,17,18], altAb: [5],
-    targetBact: [4,5,12],
-    note: "Switch to oral after 24–48h clinical improvement to complete 14 days. IM/PO option: Ceftriaxone 500mg IM once + Doxycycline + Metronidazole x 14 days."
+    note: "Switch to oral after 24–48h clinical improvement to complete 14 days."
   },
   {
     name: "Pneumonia — CAP (Standard Inpatient)",
-    pathogens: "S. pneumoniae, H. influenzae, Mycoplasma, Chlamydophila, Legionella",
+    pathogens: "S. pneumoniae, H. influenzae",
+    altPathogens: "atypicals",
     prefAb: [3,17], altAb: [6,12],
-    targetBact: [3,4,5,12],
-    note: "GPU preferred: Unasyn + Doxycycline. ICU preferred: Unasyn + Azithromycin. MRSA CAP suspected: add vancomycin or linezolid. Severe CAP: add hydrocortisone 50mg IV q6h x 4 days."
+    note: "ICU preferred: Unasyn + Azithromycin. MRSA CAP suspected: add vancomycin or linezolid. Severe CAP: hydrocortisone 50mg IV q6h x 4 days."
   },
   {
     name: "Pneumonia — CAP with MRSA/Pseudomonas Risk",
-    pathogens: "S. pneumoniae, H. influenzae, Enterobacteriaceae, Pseudomonas, S. aureus",
+    pathogens: "S. pneumoniae, H. influenzae, MRSA, Pseudomonas",
+    altPathogens: "ESBL, Enterobacteriaceae, atypicals",
     prefAb: [8,0,17], altAb: [9,12],
-    targetBact: [1,2,3,5,6,8,12],
-    note: "Risk factors: Severe CAP/ICU + hospitalization within 90d + parenteral abx within 90d; prior MRSA or resistant GNR respiratory isolation within 1yr; severe structural lung disease. Linezolid preferred over vancomycin in ICU."
+    note: "Risk factors: Severe CAP/ICU + hospitalization within 90d + IV abx within 90d; prior MRSA or resistant GNR isolation within 1yr; severe structural lung disease."
   },
   {
     name: "Pneumonia — HAP / VAP",
-    pathogens: "Enterobacteriaceae, Pseudomonas, S. aureus",
+    pathogens: "Enterobacteriaceae, Pseudomonas, MRSA",
+    altPathogens: "MSSA, Enterobacter/AmpC",
     prefAb: [8,0], altAb: [9],
-    targetBact: [1,2,6,7,8],
-    note: "Refer to unit-specific antibiograms for Gram-negative coverage. Severe β-lactam allergy: Aztreonam + Vancomycin."
+    note: "Refer to unit-specific antibiograms. Severe β-lactam allergy: Aztreonam + Vancomycin."
   },
   {
     name: "Pneumonia — Lung Abscess / Empyema (CAP)",
-    pathogens: "Gram-positive oral flora, anaerobes",
+    pathogens: "oral anaerobes, Streptococci, MSSA",
+    altPathogens: "",
     prefAb: [3], altAb: [6,18],
-    targetBact: [2,3,4,10,11],
-    note: "HAP/VAP associated: Pip/Tazo + Vancomycin or Cefepime + Metro + Vancomycin. Moxifloxacin for severe β-lactam allergy."
+    note: "HAP/VAP associated: Pip/Tazo + Vancomycin or Cefepime + Metro + Vancomycin."
   },
   {
     name: "Septic Arthritis — Native Joint",
     pathogens: "Staphylococci",
+    altPathogens: "",
     prefAb: [0], altAb: [],
-    targetBact: [1,2],
-    note: "For suspected gonococcal etiology, use Ceftriaxone instead."
+    note: "For suspected gonococcal: use Ceftriaxone instead."
   },
   {
     name: "Septic Arthritis — Prosthetic Joint",
     pathogens: "Staphylococci",
+    altPathogens: "",
     prefAb: [0], altAb: [],
-    targetBact: [1,2],
     note: "Add rifampin. Some experts suggest starting rifampin after 48h of clear blood cultures."
   },
   {
     name: "SSTI — Cellulitis with Abscess / Purulence",
-    pathogens: "Staphylococci (MRSA empiric)",
+    pathogens: "MRSA",
+    altPathogens: "MSSA",
     prefAb: [0], altAb: [15,17],
-    targetBact: [1,2],
     note: "Oral for mild/outpatient: TMP/SMX or Doxycycline. ~25–30% of S. aureus at HFH are clindamycin-resistant."
   },
   {
     name: "SSTI — Non-purulent Cellulitis",
-    pathogens: "Streptococci, Staphylococci",
+    pathogens: "Streptococci",
+    altPathogens: "MSSA",
     prefAb: [4], altAb: [2,0],
-    targetBact: [2,3,4],
-    note: "Mild: Cephalexin or Dicloxacillin PO. Moderate: Cefazolin or Nafcillin IV. Moderate-severe or IV β-lactam failure: Vancomycin. Clindamycin not reliable empirically vs. S. aureus at HFH."
+    note: "Mild: Cephalexin PO. Moderate: Cefazolin or Nafcillin IV. Moderate-severe/failure: Vancomycin. Clindamycin not reliable empirically vs. S. aureus at HFH."
   },
   {
     name: "SSTI — Necrotizing Fasciitis (Community)",
-    pathogens: "Streptococci, Staphylococci, Clostridium, Gram-negatives",
+    pathogens: "Streptococci, Staphylococci, gut anaerobes",
+    altPathogens: "Enterobacteriaceae",
     prefAb: [10,0], altAb: [16],
-    targetBact: [1,2,4,5,11],
-    note: "Add clindamycin 48–72h for anti-toxin effect vs. S. pyogenes. Discontinue when GAS ruled out. Linezolid alternative to vancomycin — discontinue after 48–72h."
+    note: "Add clindamycin 48–72h anti-toxin effect vs. S. pyogenes. Discontinue when GAS ruled out."
   },
   {
     name: "SSTI — Necrotizing Fasciitis (Pseudomonas Suspected)",
-    pathogens: "Streptococci, Staphylococci, Clostridium, Gram-negatives",
+    pathogens: "Streptococci, Staphylococci, gut anaerobes, Pseudomonas",
+    altPathogens: "Enterobacteriaceae",
     prefAb: [9,0], altAb: [16],
-    targetBact: [1,2,4,5,6,8,11],
     note: "Add clindamycin 48–72h for anti-toxin effect. Discontinue when GAS ruled out."
   },
   {
     name: "SSTI — Diabetic Foot / Vascular Insufficiency",
-    pathogens: "S. aureus, Streptococci",
+    pathogens: "Staphylococci, Streptococci",
+    altPathogens: "",
     prefAb: [3], altAb: [4,0],
-    targetBact: [1,2,3,4],
     note: "Mild: Unasyn or Cefazolin. Moderate to severe: Vancomycin."
   },
   {
     name: "SSTI — Polymicrobial Open Wound",
-    pathogens: "S. aureus, Streptococci, Enterobacteriaceae, anaerobes",
+    pathogens: "Staphylococci, Streptococci, Enterobacteriaceae, anaerobes",
+    altPathogens: "",
     prefAb: [6,18,0], altAb: [15,17],
-    targetBact: [1,2,3,4,5,11],
-    note: "Mild PO: TMP/SMX or Doxycycline. Mod-severe: Ceftriaxone + Metro + Vancomycin or Ceftaroline + Metro. Pseudomonas suspected: Pip/Tazo + Vancomycin."
+    note: "Mild PO: TMP/SMX or Doxycycline. Mod-severe: Ceftriaxone + Metro + Vancomycin. Pseudomonas suspected: Pip/Tazo + Vancomycin."
   },
   {
     name: "SSTI — Animal or Human Bite",
-    pathogens: "Pasteurella, Staphylococci, Streptococci, anaerobes",
+    pathogens: "Staphylococci, Streptococci, oral anaerobes",
+    altPathogens: "Pasteurella",
     prefAb: [3], altAb: [14,17],
-    targetBact: [1,2,3,4,10],
     note: "PO: Amoxicillin-clavulanate. Severe β-lactam allergy: Moxifloxacin or Doxycycline."
   },
   {
     name: "UTI — Uncomplicated Cystitis",
-    pathogens: "Enterobacteriaceae, Enterococci",
+    pathogens: "Enterobacteriaceae",
+    altPathogens: "Enterococcus",
     prefAb: [15], altAb: [13],
-    targetBact: [0,5],
-    note: "Preferred: Nitrofurantoin (CrCl>30) x 5d (not on biogram) or TMP/SMX x 3d. Fluoroquinolones: reserve for cases with no other options. Refer to UTI guidelines."
+    note: "Preferred: Nitrofurantoin (CrCl>30) x 5d (not on biogram) or TMP/SMX x 3d. Fluoroquinolones: reserve for no other options."
   },
   {
     name: "UTI — Pyelonephritis (Inpatient)",
-    pathogens: "Enterobacteriaceae, Enterococci",
+    pathogens: "Enterobacteriaceae",
+    altPathogens: "Enterococcus, ESBL",
     prefAb: [6], altAb: [10,8],
-    targetBact: [0,5,7,9],
-    note: "Ertapenem if prior ESBL/AmpC within 12mo (low Pseudomonas risk). Add ampicillin/vancomycin for high-risk enterococcal UTI. Aztreonam for severe β-lactam allergy."
+    note: "Ertapenem if prior ESBL/AmpC within 12mo. Add ampicillin/vancomycin for high-risk enterococcal UTI. Aztreonam for severe β-lactam allergy."
   },
   {
     name: "Ventricular Assist Device Infection",
-    pathogens: "Enterobacteriaceae, Staphylococci",
+    pathogens: "Staphylococci, Enterobacteriaceae",
+    altPathogens: "",
     prefAb: [8,0], altAb: [],
-    targetBact: [1,2,5,6],
     note: "Severe β-lactam allergy: Aztreonam + Vancomycin."
   }
 ];
 
-// ── STATE ──
+// ─── STATE ───────────────────────────────────────────────────────────────────
 let mode = 'antibiotic';
 let selectedAb   = new Set();
 let selectedBact = new Set();
-let selectedDx   = null;
+let selectedPol  = null;
 
-// ── MODE ──
+// ─── MODE ────────────────────────────────────────────────────────────────────
 function setMode(m) {
   mode = m;
   clearAll(false);
   document.getElementById('btn-ab').className   = 'mode-tab' + (m==='antibiotic' ? ' active-ab'   : '');
   document.getElementById('btn-bact').className = 'mode-tab' + (m==='bacteria'   ? ' active-bact' : '');
-  document.getElementById('btn-dx').className   = 'mode-tab' + (m==='dx'         ? ' active-dx'   : '');
-  document.getElementById('dx-panel').className = m==='dx' ? 'visible' : '';
+  document.getElementById('btn-pol').className  = 'mode-tab' + (m==='policy'     ? ' active-pol'  : '');
+  document.getElementById('pol-panel').className = m==='policy' ? 'visible' : '';
 }
 
 function clearAll(doRender=true) {
   selectedAb.clear();
   selectedBact.clear();
-  selectedDx = null;
-  document.querySelectorAll('.dx-chip').forEach(c => c.classList.remove('selected'));
+  selectedPol = null;
+  document.querySelectorAll('.pol-chip').forEach(c => c.classList.remove('selected'));
   document.getElementById('policy-card').className = '';
   document.getElementById('policy-card').innerHTML = '';
   document.getElementById('info-bar').className = 'info-bar';
   if (doRender) { render(); updateInfo(); }
 }
 
-// ── DX PANEL ──
-function buildDxPanel() {
-  const grid = document.getElementById('dx-grid');
+// ─── POLICY PANEL ────────────────────────────────────────────────────────────
+function buildPolPanel() {
+  const grid = document.getElementById('pol-grid');
   diagnoses.forEach((dx, i) => {
     const btn = document.createElement('button');
-    btn.className = 'dx-chip';
+    btn.className = 'pol-chip';
     btn.textContent = dx.name;
     btn.dataset.idx = i;
-    btn.onclick = () => selectDx(i);
+    btn.onclick = () => selectPol(i);
     grid.appendChild(btn);
   });
 }
 
-function filterDx(q) {
+function filterPol(q) {
   q = q.toLowerCase();
-  document.querySelectorAll('.dx-chip').forEach(c => {
+  document.querySelectorAll('.pol-chip').forEach(c => {
     c.classList.toggle('hidden', !c.textContent.toLowerCase().includes(q));
   });
 }
 
-function selectDx(i) {
-  selectedDx = i;
-  document.querySelectorAll('.dx-chip').forEach(c => {
+function selectPol(i) {
+  selectedPol = i;
+  document.querySelectorAll('.pol-chip').forEach(c => {
     c.classList.toggle('selected', parseInt(c.dataset.idx) === i);
   });
   showPolicyCard(i);
@@ -840,55 +619,62 @@ function selectDx(i) {
 function showPolicyCard(i) {
   const dx = diagnoses[i];
   const card = document.getElementById('policy-card');
-  const prefNames = dx.prefAb.map(ai => antibiotics[ai]).join(' + ') || '—';
-  const altNames  = dx.altAb.map(ai  => antibiotics[ai]).join(', ')  || null;
+  const { prefRows, altRows } = resolvePathogens(dx.pathogens, dx.altPathogens);
+  const prefAbNames = dx.prefAb.map(ai => antibiotics[ai]).join(' + ') || '—';
+  const altAbNames  = dx.altAb.map(ai  => antibiotics[ai]).join(', ') || null;
+  const prefBactNames = [...prefRows].map(r => bacteriaList[r].name).join(', ') || '—';
+  const altBactNames  = [...altRows].map(r  => bacteriaList[r].name).join(', ') || null;
+
   card.innerHTML = `
     <div class="pc-title">Henry Ford Empiric Policy — ${dx.name}</div>
     <div class="pc-section">
       <div class="pc-key">Suspected Pathogens</div>
-      <div class="pc-val">${dx.pathogens}</div>
+      <div class="pc-val">${dx.pathogens}${dx.altPathogens ? ` <span class="note">/ alt: ${dx.altPathogens}</span>` : ''}</div>
+      <div class="pc-aliases">→ Biogram rows: <strong style="color:var(--path-pref)">${prefBactNames}</strong>${altBactNames ? ` / alt: <strong style="color:var(--path-alt)">${altBactNames}</strong>` : ''}</div>
     </div>
     <div class="pc-section">
       <div class="pc-key">Preferred / First-line Therapy</div>
-      <div class="pc-val"><em>${prefNames}</em></div>
+      <div class="pc-val"><em>${prefAbNames}</em></div>
     </div>
-    ${altNames ? `<div class="pc-section"><div class="pc-key">Alternatives</div><div class="pc-val">${altNames}</div></div>` : ''}
+    ${altAbNames ? `<div class="pc-section"><div class="pc-key">Alternatives</div><div class="pc-val">${altAbNames}</div></div>` : ''}
     ${dx.note ? `<div class="pc-section"><div class="pc-key">Clinical Notes</div><div class="pc-val"><span class="note">${dx.note}</span></div></div>` : ''}
   `;
   card.className = 'visible';
 }
 
-// ── INFO BAR ──
+// ─── INFO BAR ────────────────────────────────────────────────────────────────
 function updateInfo() {
   const bar = document.getElementById('info-bar');
 
-  if (mode === 'dx' && selectedDx !== null) {
-    const dx = diagnoses[selectedDx];
-    bar.className = 'info-bar dx-mode';
-    const prefPills = dx.prefAb.map(ai => `<span class="pill policy-pref">${antibiotics[ai]}</span>`).join('');
-    const altPills  = dx.altAb.map(ai  => `<span class="pill policy-alt">${antibiotics[ai]}</span>`).join('');
-    const bactPills = dx.targetBact.map(bi => `<span class="pill strong">${bacteria[bi]}</span>`).join('');
+  if (mode === 'policy' && selectedPol !== null) {
+    const dx = diagnoses[selectedPol];
+    const { prefRows, altRows } = resolvePathogens(dx.pathogens, dx.altPathogens);
+    bar.className = 'info-bar pol-mode';
+    const prefAbPills = dx.prefAb.map(ai => `<span class="pill pol-pref">${antibiotics[ai]}</span>`).join('');
+    const altAbPills  = dx.altAb.map(ai  => `<span class="pill pol-alt">${antibiotics[ai]}</span>`).join('');
+    const prefBactPills = [...prefRows].map(r => `<span class="pill path-pref">${bacteriaList[r].name}</span>`).join('');
+    const altBactPills  = [...altRows].map(r  => `<span class="pill path-alt">${bacteriaList[r].name}</span>`).join('');
     bar.innerHTML = `
-      <span class="label policy-label">POLICY</span>
+      <span class="label pol-label">POLICY</span>
       <div style="display:flex;flex-direction:column;gap:0.3rem;flex:1;">
-        <div class="pills">${prefPills}${altPills ? '<span style="color:var(--text-muted);font-size:0.72rem;margin:0 0.25rem;">alt:</span>'+altPills : ''}</div>
-        ${bactPills ? `<div class="pills">${bactPills}</div>` : ''}
+        <div class="pills">${prefAbPills}${altAbPills ? '<span style="color:var(--text-muted);font-size:0.71rem;margin:0 0.2rem;">alt abx:</span>'+altAbPills : ''}</div>
+        <div class="pills">${prefBactPills}${altBactPills ? '<span style="color:var(--text-muted);font-size:0.71rem;margin:0 0.2rem;">alt path:</span>'+altBactPills : ''}</div>
       </div>`;
     return;
   }
 
   bar.className = 'info-bar';
   if (selectedAb.size === 0 && selectedBact.size === 0) {
-    bar.innerHTML = '<span class="label">TIP</span><span>Click column headers to select antibiotics, bacteria rows, or use 🟣 Diagnosis mode for empiric guidelines.</span>';
+    bar.innerHTML = '<span class="label">TIP</span><span>Click column headers to select antibiotics, bacteria rows, or use 🟣 Policy mode for empiric guidelines.</span>';
     return;
   }
 
   if (mode === 'antibiotic' && selectedAb.size > 0) {
     const covered = [], partial = [];
-    bacteria.forEach((bact,bi) => {
+    bacteriaList.forEach((b,bi) => {
       let s=false,p=false;
       selectedAb.forEach(ai => { if(data[bi][ai]==='xx') s=true; else if(data[bi][ai]==='o') p=true; });
-      if(s) covered.push(bact); else if(p) partial.push(bact);
+      if(s) covered.push(b.name); else if(p) partial.push(b.name);
     });
     let html = '<span class="label">Coverage</span><div class="pills">';
     covered.forEach(b => html += `<span class="pill strong">${b}</span>`);
@@ -910,7 +696,7 @@ function updateInfo() {
   }
 }
 
-// ── TOGGLE HANDLERS ──
+// ─── TOGGLE HANDLERS ─────────────────────────────────────────────────────────
 function toggleAb(i) {
   if (mode !== 'antibiotic') setMode('antibiotic');
   selectedAb.has(i) ? selectedAb.delete(i) : selectedAb.add(i);
@@ -923,26 +709,54 @@ function toggleBact(i) {
   render(); updateInfo();
 }
 
-// ── RENDER ──
+// ─── RENDER ──────────────────────────────────────────────────────────────────
 function render() {
   const thead = document.getElementById('thead');
   const tbody = document.getElementById('tbody');
-  const cellMap = new Map();
 
-  const dx        = selectedDx !== null ? diagnoses[selectedDx] : null;
-  const prefAbSet = dx ? new Set(dx.prefAb) : new Set();
-  const allPolAb  = dx ? new Set([...dx.prefAb, ...dx.altAb]) : new Set();
-  const polBact   = dx ? new Set(dx.targetBact) : new Set();
+  const cellMap = new Map(); // key `bi-ai` → class suffix string
 
-  if (mode === 'dx' && dx) {
-    polBact.forEach(bi => {
-      allPolAb.forEach(ai => {
+  const dx       = selectedPol !== null ? diagnoses[selectedPol] : null;
+  const prefAbSet= dx ? new Set(dx.prefAb) : new Set();
+  const altAbSet = dx ? new Set(dx.altAb)  : new Set();
+  let prefRows = new Set(), altRows = new Set();
+  if (dx) {
+    const resolved = resolvePathogens(dx.pathogens, dx.altPathogens);
+    prefRows = resolved.prefRows;
+    altRows  = resolved.altRows;
+  }
+
+  if (mode === 'policy' && dx) {
+    // For each preferred pathogen row × preferred antibiotic col → pol-pref
+    prefRows.forEach(bi => {
+      prefAbSet.forEach(ai => {
         const v = data[bi][ai];
-        cellMap.set(`${bi}-${ai}`, v==='xx' ? 'p-strong' : v==='o' ? 'p-some' : 'p-dim');
+        cellMap.set(`${bi}-${ai}`, v==='xx' ? 'pol-pref-strong' : v==='o' ? 'pol-pref-some' : 'pol-pref-dim');
+      });
+      altAbSet.forEach(ai => {
+        if (!cellMap.has(`${bi}-${ai}`)) {
+          const v = data[bi][ai];
+          cellMap.set(`${bi}-${ai}`, v==='xx' ? 'pol-alt-strong' : v==='o' ? 'pol-alt-some' : 'pol-alt-dim');
+        }
+      });
+    });
+    // For each alt pathogen row × preferred antibiotic col → pol-alt
+    altRows.forEach(bi => {
+      prefAbSet.forEach(ai => {
+        if (!cellMap.has(`${bi}-${ai}`)) {
+          const v = data[bi][ai];
+          cellMap.set(`${bi}-${ai}`, v==='xx' ? 'pol-alt-strong' : v==='o' ? 'pol-alt-some' : 'pol-alt-dim');
+        }
+      });
+      altAbSet.forEach(ai => {
+        if (!cellMap.has(`${bi}-${ai}`)) {
+          const v = data[bi][ai];
+          cellMap.set(`${bi}-${ai}`, v==='xx' ? 'pol-alt-strong' : v==='o' ? 'pol-alt-some' : 'pol-alt-dim');
+        }
       });
     });
   } else if (mode === 'antibiotic' && selectedAb.size > 0) {
-    bacteria.forEach((_,bi) => {
+    bacteriaList.forEach((_,bi) => {
       selectedAb.forEach(ai => {
         const v = data[bi][ai];
         cellMap.set(`${bi}-${ai}`, v==='xx' ? 'strong' : v==='o' ? 'some' : 'dim');
@@ -957,37 +771,48 @@ function render() {
     });
   }
 
-  // thead
+  // ── THEAD ──
   let hh = '<tr><th><span style="display:block;padding:0.75rem 1rem;font-family:IBM Plex Mono,monospace;font-size:0.68rem;color:var(--text-muted);">Organism / Antibiotic</span></th>';
   antibiotics.forEach((ab,ai) => {
     let cls = '';
-    if (mode==='dx' && dx) {
-      if(prefAbSet.has(ai))   cls=' policy-pref-ab';
-      else if(allPolAb.has(ai)) cls=' policy-alt-ab';
+    if (mode==='policy' && dx) {
+      if(prefAbSet.has(ai))  cls=' pol-pref-ab';
+      else if(altAbSet.has(ai)) cls=' pol-alt-ab';
     } else if(selectedAb.has(ai)) cls=' selected-ab';
     hh += `<th><span class="ab-header${cls}" onclick="toggleAb(${ai})">${ab}</span></th>`;
   });
   hh += '</tr>';
   thead.innerHTML = hh;
 
-  // tbody
+  // ── TBODY ──
   let bh = '';
-  bacteria.forEach((bact,bi) => {
-    const rowCls  = (mode==='antibiotic' && selectedAb.size>0) ? ' row-highlight' : '';
-    let   lblCls  = '';
-    if(mode==='dx' && dx && polBact.has(bi))  lblCls=' policy-bact';
-    else if(selectedBact.has(bi))             lblCls=' selected-bact';
+  bacteriaList.forEach((bact, bi) => {
+    const rowCls = (mode==='antibiotic' && selectedAb.size>0) ? ' row-highlight' : '';
 
-    bh += `<tr class="${rowCls}"><td class="${lblCls}" onclick="toggleBact(${bi})">${bact}</td>`;
+    let lblCls = '';
+    if (mode==='policy' && dx) {
+      if(prefRows.has(bi))  lblCls=' path-pref-row';
+      else if(altRows.has(bi)) lblCls=' path-alt-row';
+    } else if(selectedBact.has(bi)) lblCls=' selected-bact';
+
+    // Row label with aliases
+    const labelHtml = `<div class="bact-name"><span class="bact-primary">${bact.name}</span><span class="bact-alias">${bact.aliases}</span></div>`;
+
+    bh += `<tr class="${rowCls}"><td class="${lblCls}" onclick="toggleBact(${bi})">${labelHtml}</td>`;
+
     antibiotics.forEach((_,ai) => {
       const h = cellMap.get(`${bi}-${ai}`);
       const cellCls =
-        h==='p-strong' ? ' cell-policy-strong' :
-        h==='p-some'   ? ' cell-policy-some'   :
-        h==='p-dim'    ? ' cell-policy-dim'     :
-        h==='strong'   ? ' cell-match-strong'   :
-        h==='some'     ? ' cell-match-some'     :
-        h==='dim'      ? ' cell-dim'            : '';
+        h==='pol-pref-strong' ? ' cell-pol-pref-strong' :
+        h==='pol-pref-some'   ? ' cell-pol-pref-some'   :
+        h==='pol-pref-dim'    ? ' cell-pol-pref-dim'     :
+        h==='pol-alt-strong'  ? ' cell-pol-alt-strong'  :
+        h==='pol-alt-some'    ? ' cell-pol-alt-some'     :
+        h==='pol-alt-dim'     ? ' cell-pol-alt-dim'      :
+        h==='strong'          ? ' cell-match-strong'     :
+        h==='some'            ? ' cell-match-some'       :
+        h==='dim'             ? ' cell-dim'              : '';
+
       const val = data[bi][ai];
       const inner = val==='xx'
         ? `<span class="cell-inner cell-strong">xx</span>`
@@ -1001,7 +826,8 @@ function render() {
   tbody.innerHTML = bh;
 }
 
-buildDxPanel();
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildPolPanel();
 render();
 updateInfo();
 </script>
